@@ -1,0 +1,1 @@
+Version 0_0 is the initial development branch. In here the modules that existed from CoGI are first copied over, and then cleaned up/sorted into modules, tools and deprecated. Data may also be present
