@@ -19,6 +19,6 @@
             %Perform dimensional scaling (if option needed)
             %Generate PseudoEvents (CIE or other method, if option needed)
             %Perform LUT (may involve projection ones too)
-    %SIGNAL 
+    %SIGNAL PROCESSING
 
     "Moved sinograms folder into main section and added template script for the overall flow with PC-SIM and this folder plan."
