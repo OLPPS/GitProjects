@@ -1,0 +1,49 @@
+function V = analytical_chain(Q, t, Rvals, Cvals)
+
+dt = t(2)-t(1);
+
+% Step 1: Current
+I = gradient(Q, dt);
+
+% Step 2: Fit exponentials (simple fixed basis)
+tau = [2e-9 10e-9 50e-9 100e-9 200e-9];
+
+
+% Find valid detector region
+threshold = 1e-6 * max(abs(I));  % or similar
+idx = find(abs(I) > threshold);
+
+if isempty(idx)
+    idx_end = length(I);
+else
+    idx_end = idx(end);
+end
+
+t_det = t(1:idx_end);
+I_det = I(1:idx_end);
+
+B = fit_exponentials(I_det, t_det, tau);
+
+% Step 3: Apply CSA analytically
+tau_f = Rvals(1)*Cvals(1); % assume first stage is CSA
+
+V = zeros(size(t));
+
+for i=1:length(tau)
+
+    td = tau(i);
+    denom = (1/td - 1/tau_f);
+
+    V = V + B(i)/denom * (exp(-t/tau_f) - exp(-t/td));
+
+end
+
+% Step 4: Apply shaping analytically (approx via repeated RC)
+for k = 2:length(Rvals)
+
+    tau_s = Rvals(k)*Cvals(k);
+    V = apply_RC_analytic(V, t, tau_s);
+
+end
+
+end
